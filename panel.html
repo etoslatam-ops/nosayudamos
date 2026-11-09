@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi panel · NosAyudamos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23e8590c'/><text x='50' y='68' font-size='56' text-anchor='middle' fill='white'>🤝</text></svg>">
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenedor">
+    <a class="logo" href="index.html"><span class="marca">🤝</span>Nos<b>Ayudamos</b></a>
+    <nav class="nav">
+      <a class="enlace ocultar-movil" href="ofertas.html">Ofertas</a>
+      <button class="btn btn-suave btn-chico" id="salir">Salir</button>
+    </nav>
+  </div>
+</header>
+
+<div class="panel-cabeza">
+  <div class="contenedor">
+    <h1 id="saludo">Hola 👋</h1>
+    <p id="subtitulo"></p>
+  </div>
+</div>
+
+<div class="contenedor panel-cuerpo">
+  <div class="panel-pestanas" id="pestanas"></div>
+  <div id="msj" class="mensaje"></div>
+
+  <!-- ================= TRABAJADOR ================= -->
+  <div class="vista" id="v-perfil-t">
+    <form class="caja" id="f-perfil-t">
+      <h2>Mi perfil</h2>
+      <p style="color:var(--gris);margin-top:-6px">Esto es lo que ven los negocios cuando buscan personal.</p>
+      <label class="interruptor" style="margin:10px 0 20px"><input type="checkbox" id="t-disponible"> Estoy disponible para trabajos</label>
+      <div class="fila">
+        <div class="campo"><label for="t-nombre">Nombre completo</label><input id="t-nombre" type="text" required></div>
+        <div class="campo"><label for="t-tel">Teléfono / WhatsApp</label><input id="t-tel" type="tel" required></div>
+      </div>
+      <div class="campo"><label>¿En qué sabés trabajar?</label><div class="chips" id="t-areas"></div></div>
+      <div class="campo"><label for="t-dispo">¿Qué días u horas tenés libres?</label><input id="t-dispo" type="text" placeholder="Ej: lunes y martes, o fines de semana en la tarde"></div>
+      <div class="campo"><label for="t-exp">Experiencia</label><textarea id="t-exp" placeholder="Ej: 3 años como salonero en hotel, sé manejar caja…"></textarea></div>
+      <div class="campo"><label for="t-desc">Algo más sobre vos</label><textarea id="t-desc" placeholder="Idiomas, licencia de conducir, herramientas propias…"></textarea></div>
+      <button class="btn btn-lava">Guardar perfil</button>
+    </form>
+  </div>
+
+  <div class="vista" id="v-postulaciones">
+    <div class="lista" id="lista-postulaciones"></div>
+  </div>
+
+  <!-- ================= EMPRESA ================= -->
+  <div class="vista" id="v-ofertas">
+    <div class="lista" id="lista-ofertas"></div>
+  </div>
+
+  <div class="vista" id="v-publicar">
+    <form class="caja" id="f-oferta" style="max-width:720px">
+      <h2>Publicar una oferta</h2>
+      <div class="campo"><label for="o-titulo">Título</label><input id="o-titulo" type="text" required placeholder="Ej: Salonero para fin de semana"></div>
+      <div class="fila">
+        <div class="campo"><label for="o-area">Área</label><select id="o-area" required></select></div>
+        <div class="campo"><label for="o-cupos">¿Cuántas personas?</label><input id="o-cupos" type="number" min="1" value="1" required></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="o-inicio">Desde</label><input id="o-inicio" type="date" required></div>
+        <div class="campo"><label for="o-fin">Hasta</label><input id="o-fin" type="date" required><small>Máximo 2 semanas.</small></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="o-horario">Horario</label><input id="o-horario" type="text" placeholder="Ej: 7am a 3pm"></div>
+        <div class="campo"><label for="o-pago">Pago</label><input id="o-pago" type="text" placeholder="Ej: ₡15 000 por día"></div>
+      </div>
+      <div class="campo"><label for="o-desc">Descripción</label><textarea id="o-desc" placeholder="Qué hay que hacer, requisitos, si incluye comida o transporte…"></textarea></div>
+      <button class="btn btn-lava">Publicar oferta</button>
+    </form>
+  </div>
+
+  <div class="vista" id="v-personal">
+    <div class="filtros"><select id="p-area" style="max-width:280px"><option value="">Todas las áreas</option></select></div>
+    <div class="lista" id="lista-personal"></div>
+  </div>
+
+  <div class="vista" id="v-negocio">
+    <form class="caja" id="f-negocio" style="max-width:720px">
+      <h2>Mi negocio</h2>
+      <div class="fila">
+        <div class="campo"><label for="n-negocio">Nombre del negocio</label><input id="n-negocio" type="text" required></div>
+        <div class="campo"><label for="n-tipo">Tipo de negocio</label><input id="n-tipo" type="text" placeholder="Hotel, restaurante, tour operador…"></div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="n-nombre">Persona encargada</label><input id="n-nombre" type="text" required></div>
+        <div class="campo"><label for="n-tel">Teléfono / WhatsApp</label><input id="n-tel" type="tel" required></div>
+      </div>
+      <div class="campo"><label for="n-dir">Dirección</label><input id="n-dir" type="text" placeholder="Ej: 200 m oeste de la iglesia, La Fortuna"></div>
+      <div class="campo"><label for="n-desc">Descripción</label><textarea id="n-desc"></textarea></div>
+      <button class="btn btn-lava">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<footer id="pie"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="comun.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let perfil = null;
+
+const ESTADOS_OFERTA = {
+  activa: ["Activa", "ok"], pausada: ["Pausada", "gris"],
+  contratado: ["Ya contraté", "lava"], ya_no_se_necesita: ["Ya no se necesita", "gris"]
+};
+const ESTADOS_POST = {
+  enviada: ["Enviada", "gris"], vista: ["Vista por el negocio", "lava"], aceptada: ["¡Aceptada!", "ok"],
+  rechazada: ["No seleccionada", "mal"], retirada: ["Retirada", "gris"]
+};
+const pastilla = (mapa, e) => `<span class="pastilla ${mapa[e]?.[1] || "gris"}">${mapa[e]?.[0] || e}</span>`;
+
+function pestanas(lista) {
+  $("pestanas").innerHTML = lista.map(([id, nombre]) =>
+    id.startsWith("http") || id.endsWith(".html")
+      ? `<button onclick="location.href='${id}'">${nombre}</button>`
+      : `<button data-vista="${id}">${nombre}</button>`).join("");
+  $("pestanas").querySelectorAll("[data-vista]").forEach(b => b.onclick = () => abrir(b.dataset.vista));
+}
+
+function abrir(id) {
+  document.querySelectorAll(".vista").forEach(v => v.classList.toggle("activa", v.id === id));
+  $("pestanas").querySelectorAll("[data-vista]").forEach(b => b.classList.toggle("activa", b.dataset.vista === id));
+  $("msj").classList.remove("visible");
+  const cargar = { "v-postulaciones": cargarPostulaciones, "v-ofertas": cargarOfertas, "v-personal": cargarPersonal };
+  cargar[id]?.();
+}
+
+// ============ TRABAJADOR ============
+async function iniciarTrabajador() {
+  $("subtitulo").textContent = "Tu perfil de trabajador";
+  pestanas([["v-perfil-t", "Mi perfil"], ["ofertas.html", "Buscar ofertas"], ["v-postulaciones", "Mis postulaciones"]]);
+  const { data: t } = await sb.from("trabajadores").select("*").eq("perfil_id", perfil.id).maybeSingle();
+  $("t-nombre").value = perfil.nombre || "";
+  $("t-tel").value = perfil.telefono || "";
+  $("t-disponible").checked = t?.disponible ?? true;
+  $("t-dispo").value = t?.disponibilidad || "";
+  $("t-exp").value = t?.experiencia || "";
+  $("t-desc").value = t?.descripcion || "";
+  const mias = new Set(t?.areas || []);
+  $("t-areas").innerHTML = NA.areas.map(a =>
+    `<label class="chip"><input type="checkbox" value="${a.id}" ${mias.has(a.id) ? "checked" : ""}>${NA.esc(a.nombre)}</label>`).join("");
+  abrir(!t?.areas?.length ? "v-perfil-t" : "v-postulaciones");
+  if (!t?.areas?.length) NA.mensaje("msj", "Completá tu perfil y marcá en qué sabés trabajar para que los negocios te encuentren.", "info");
+}
+
+$("f-perfil-t").onsubmit = async e => {
+  e.preventDefault();
+  const areas = [...$("t-areas").querySelectorAll("input:checked")].map(i => i.value);
+  if (!areas.length) return NA.mensaje("msj", "Marcá al menos un área de trabajo.", "mal");
+  const r1 = await sb.from("perfiles").update({ nombre: $("t-nombre").value.trim(), telefono: $("t-tel").value.trim() }).eq("id", perfil.id);
+  const r2 = await sb.from("trabajadores").update({
+    areas, disponible: $("t-disponible").checked, disponibilidad: $("t-dispo").value.trim(),
+    experiencia: $("t-exp").value.trim(), descripcion: $("t-desc").value.trim()
+  }).eq("perfil_id", perfil.id);
+  const err = r1.error || r2.error;
+  if (err) return NA.mensaje("msj", NA.error(err), "mal");
+  perfil.nombre = $("t-nombre").value.trim();
+  $("saludo").textContent = `Hola, ${perfil.nombre.split(" ")[0]} 👋`;
+  NA.mensaje("msj", "Perfil guardado.", "ok");
+  scrollTo({ top: 0, behavior: "smooth" });
+};
+
+async function cargarPostulaciones() {
+  const cont = $("lista-postulaciones");
+  cont.innerHTML = `<p class="cargando">Cargando…</p>`;
+  const { data: posts, error } = await sb.from("postulaciones").select("*").eq("trabajador_id", perfil.id).order("creado_en", { ascending: false });
+  if (error) return (cont.innerHTML = `<div class="vacio">${NA.esc(NA.error(error))}</div>`);
+  if (!posts.length) return (cont.innerHTML = `<div class="vacio">Todavía no te has postulado a ninguna oferta.<br><br><a class="btn btn-lava btn-chico" href="ofertas.html">Buscar ofertas</a></div>`);
+  const ids = posts.map(p => p.oferta_id);
+  const { data: ofertas } = await sb.from("ofertas").select("*").in("id", ids);
+  const of = Object.fromEntries((ofertas || []).map(o => [o.id, o]));
+  const empIds = [...new Set((ofertas || []).map(o => o.empresa_id))];
+  const { data: emps } = empIds.length ? await sb.from("empresas").select("*").in("perfil_id", empIds) : { data: [] };
+  const { data: perfs } = empIds.length ? await sb.from("perfiles").select("id,telefono").in("id", empIds) : { data: [] };
+  const em = Object.fromEntries((emps || []).map(e => [e.perfil_id, e]));
+  const tel = Object.fromEntries((perfs || []).map(p => [p.id, p.telefono]));
+  cont.innerHTML = posts.map(p => {
+    const o = of[p.oferta_id];
+    if (!o) return `<article class="tarjeta"><h3>Oferta cerrada</h3><p>El negocio ya cerró esta oferta.</p>${pastilla(ESTADOS_POST, p.estado)}</article>`;
+    let extra = pastilla(ESTADOS_POST, p.estado);
+    if (p.estado === "aceptada") {
+      const wa = NA.whatsapp(tel[o.empresa_id], `Hola, soy ${perfil.nombre}, me aceptaron en "${o.titulo}" por NosAyudamos.`);
+      if (wa) extra += ` <a class="btn btn-wa btn-chico" target="_blank" rel="noopener" href="${wa}">WhatsApp al negocio</a>`;
+    }
+    if (["enviada", "vista"].includes(p.estado)) extra += ` <button class="btn btn-suave btn-chico" data-retirar="${p.id}">Retirar</button>`;
+    return NA.tarjetaOferta(o, em[o.empresa_id], extra);
+  }).join("");
+}
+
+// ============ EMPRESA ============
+async function iniciarEmpresa() {
+  pestanas([["v-ofertas", "Mis ofertas"], ["v-publicar", "Publicar oferta"], ["v-personal", "Buscar personal"], ["v-negocio", "Mi negocio"]]);
+  const { data: e } = await sb.from("empresas").select("*").eq("perfil_id", perfil.id).maybeSingle();
+  $("subtitulo").textContent = e?.nombre_negocio || "Tu negocio";
+  $("n-negocio").value = e?.nombre_negocio || "";
+  $("n-tipo").value = e?.tipo_negocio || "";
+  $("n-dir").value = e?.direccion || "";
+  $("n-desc").value = e?.descripcion || "";
+  $("n-nombre").value = perfil.nombre || "";
+  $("n-tel").value = perfil.telefono || "";
+  const opciones = NA.areas.map(a => `<option value="${a.id}">${NA.esc(a.nombre)}</option>`).join("");
+  $("o-area").innerHTML = opciones;
+  $("p-area").innerHTML += opciones;
+  $("p-area").onchange = cargarPersonal;
+  $("o-inicio").min = $("o-fin").min = NA.hoy();
+  $("o-inicio").onchange = () => { $("o-fin").min = $("o-inicio").value; if (!$("o-fin").value || $("o-fin").value < $("o-inicio").value) $("o-fin").value = $("o-inicio").value; };
+  abrir(e?.tipo_negocio ? "v-ofertas" : "v-negocio");
+  if (!e?.tipo_negocio) NA.mensaje("msj", "Completá los datos de tu negocio. Luego podés publicar tu primera oferta.", "info");
+}
+
+$("f-negocio").onsubmit = async e => {
+  e.preventDefault();
+  const r1 = await sb.from("perfiles").update({ nombre: $("n-nombre").value.trim(), telefono: $("n-tel").value.trim() }).eq("id", perfil.id);
+  const r2 = await sb.from("empresas").update({
+    nombre_negocio: $("n-negocio").value.trim(), tipo_negocio: $("n-tipo").value.trim(),
+    direccion: $("n-dir").value.trim(), descripcion: $("n-desc").value.trim()
+  }).eq("perfil_id", perfil.id);
+  const err = r1.error || r2.error;
+  if (err) return NA.mensaje("msj", NA.error(err), "mal");
+  $("subtitulo").textContent = $("n-negocio").value.trim();
+  NA.mensaje("msj", "Datos guardados.", "ok");
+};
+
+$("f-oferta").onsubmit = async e => {
+  e.preventDefault();
+  const btn = e.submitter; btn.disabled = true;
+  const { error } = await sb.from("ofertas").insert({
+    empresa_id: perfil.id, titulo: $("o-titulo").value.trim(), area: $("o-area").value,
+    cupos: +$("o-cupos").value || 1, fecha_inicio: $("o-inicio").value, fecha_fin: $("o-fin").value,
+    horario: $("o-horario").value.trim() || null, pago: $("o-pago").value.trim() || null,
+    descripcion: $("o-desc").value.trim() || null
+  });
+  btn.disabled = false;
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  $("f-oferta").reset();
+  abrir("v-ofertas");
+  NA.mensaje("msj", "¡Oferta publicada! Ya aparece en la lista de ofertas.", "ok");
+};
+
+async function cargarOfertas() {
+  const cont = $("lista-ofertas");
+  cont.innerHTML = `<p class="cargando">Cargando…</p>`;
+  const { data: ofertas, error } = await sb.from("ofertas").select("*").eq("empresa_id", perfil.id).order("creado_en", { ascending: false });
+  if (error) return (cont.innerHTML = `<div class="vacio">${NA.esc(NA.error(error))}</div>`);
+  if (!ofertas.length) return (cont.innerHTML = `<div class="vacio">Todavía no has publicado ofertas.<br><br><button class="btn btn-lava btn-chico" onclick="abrir('v-publicar')">Publicar mi primera oferta</button></div>`);
+  const { data: posts } = await sb.from("postulaciones").select("*").in("oferta_id", ofertas.map(o => o.id)).neq("estado", "retirada").order("creado_en");
+  const tIds = [...new Set((posts || []).map(p => p.trabajador_id))];
+  const { data: perfs } = tIds.length ? await sb.from("perfiles").select("*").in("id", tIds) : { data: [] };
+  const { data: trabs } = tIds.length ? await sb.from("trabajadores").select("*").in("perfil_id", tIds) : { data: [] };
+  const pf = Object.fromEntries((perfs || []).map(p => [p.id, p]));
+  const tb = Object.fromEntries((trabs || []).map(t => [t.perfil_id, t]));
+  const vencida = o => o.fecha_fin < NA.hoy();
+
+  cont.innerHTML = ofertas.map(o => {
+    const ps = (posts || []).filter(p => p.oferta_id === o.id);
+    const selector = `<select data-estado-oferta="${o.id}" style="width:auto;padding:8px 10px">
+      ${Object.entries(ESTADOS_OFERTA).map(([k, [n]]) => `<option value="${k}" ${k === o.estado ? "selected" : ""}>${n}</option>`).join("")}</select>`;
+    const lista = ps.map(p => {
+      const per = pf[p.trabajador_id] || {}, t = tb[p.trabajador_id] || {};
+      const wa = NA.whatsapp(per.telefono, `Hola ${per.nombre || ""}, te escribo por tu postulación a "${o.titulo}" en NosAyudamos.`);
+      return `<div class="postulante">
+        <strong>${NA.esc(per.nombre || "Trabajador")}</strong>
+        ${(t.areas || []).length ? `<div class="meta" style="margin:6px 0">${t.areas.map(a => `<span class="pastilla">${NA.esc(NA.nombreArea(a))}</span>`).join("")}</div>` : ""}
+        ${t.experiencia ? `<p>${NA.esc(t.experiencia)}</p>` : ""}
+        ${p.mensaje ? `<p>💬 “${NA.esc(p.mensaje)}”</p>` : ""}
+        <div class="meta" style="margin-top:8px;align-items:center">${pastilla(ESTADOS_POST, p.estado)}
+          ${wa ? `<a class="btn btn-wa btn-chico" target="_blank" rel="noopener" href="${wa}">WhatsApp</a>` : ""}
+          ${per.telefono ? `<a class="btn btn-suave btn-chico" href="tel:${NA.esc(per.telefono)}">Llamar</a>` : ""}
+          ${p.estado !== "aceptada" ? `<button class="btn btn-selva btn-chico" data-post="${p.id}" data-nuevo="aceptada">Aceptar</button>` : ""}
+          ${p.estado !== "rechazada" ? `<button class="btn btn-suave btn-chico" data-post="${p.id}" data-nuevo="rechazada">Descartar</button>` : ""}
+        </div></div>`;
+    }).join("");
+    return NA.tarjetaOferta(o, null, `
+      <div class="meta" style="width:100%;align-items:center">${selector}
+        ${vencida(o) ? `<span class="pastilla gris">Fechas vencidas</span>` : ""}
+        <button class="btn btn-borde btn-chico" data-ver="${o.id}" ${ps.length ? "" : "disabled"}>${ps.length} postulante${ps.length === 1 ? "" : "s"}</button>
+      </div>
+      <div class="postulantes" id="ps-${o.id}" style="width:100%">${lista}</div>`)
+      .replace(`<div class="negocio">Negocio</div>`, "");
+  }).join("");
+}
+
+async function cargarPersonal() {
+  const cont = $("lista-personal");
+  cont.innerHTML = `<p class="cargando">Cargando…</p>`;
+  let q = sb.from("trabajadores").select("*").eq("disponible", true).limit(100);
+  if ($("p-area").value) q = q.contains("areas", [$("p-area").value]);
+  const { data: trabs, error } = await q;
+  if (error) return (cont.innerHTML = `<div class="vacio">${NA.esc(NA.error(error))}</div>`);
+  const conAreas = (trabs || []).filter(t => t.areas?.length);
+  if (!conAreas.length) return (cont.innerHTML = `<div class="vacio">No hay personas disponibles${$("p-area").value ? " en esta área" : ""} por ahora. Publicá una oferta y te avisamos con las postulaciones.</div>`);
+  const { data: perfs } = await sb.from("perfiles").select("*").in("id", conAreas.map(t => t.perfil_id));
+  const pf = Object.fromEntries((perfs || []).map(p => [p.id, p]));
+  cont.innerHTML = conAreas.map(t => {
+    const p = pf[t.perfil_id] || {};
+    const wa = NA.whatsapp(p.telefono, `Hola ${p.nombre || ""}, te vi en NosAyudamos. ¿Tenés disponibilidad para un trabajo?`);
+    return `<article class="tarjeta">
+      <h3>${NA.esc(p.nombre || "Trabajador")}</h3>
+      <div class="meta">${t.areas.map(a => `<span class="pastilla lava">${NA.esc(NA.nombreArea(a))}</span>`).join("")}</div>
+      ${t.disponibilidad ? `<p>📅 ${NA.esc(t.disponibilidad)}</p>` : ""}
+      ${t.experiencia ? `<p>${NA.esc(t.experiencia)}</p>` : ""}
+      ${t.descripcion ? `<p>${NA.esc(t.descripcion)}</p>` : ""}
+      <div class="pie">
+        ${wa ? `<a class="btn btn-wa btn-chico" target="_blank" rel="noopener" href="${wa}">WhatsApp</a>` : ""}
+        ${p.telefono ? `<a class="btn btn-suave btn-chico" href="tel:${NA.esc(p.telefono)}">Llamar</a>` : ""}
+      </div></article>`;
+  }).join("");
+}
+
+// ============ Acciones de botones ============
+document.addEventListener("click", async ev => {
+  const ver = ev.target.closest("[data-ver]");
+  if (ver) return $("ps-" + ver.dataset.ver).classList.toggle("abierto");
+
+  const post = ev.target.closest("[data-post]");
+  if (post) {
+    post.disabled = true;
+    const { error } = await sb.from("postulaciones").update({ estado: post.dataset.nuevo }).eq("id", post.dataset.post);
+    if (error) { post.disabled = false; return NA.mensaje("msj", NA.error(error), "mal"); }
+    const abierta = post.closest(".postulantes")?.id;
+    await cargarOfertas();
+    if (abierta) $(abierta)?.classList.add("abierto");
+    return NA.mensaje("msj", post.dataset.nuevo === "aceptada" ? "Aceptado. Contactalo por WhatsApp para coordinar." : "Postulación descartada.", "ok");
+  }
+
+  const ret = ev.target.closest("[data-retirar]");
+  if (ret) {
+    if (!confirm("¿Retirar tu postulación?")) return;
+    const { error } = await sb.from("postulaciones").update({ estado: "retirada" }).eq("id", ret.dataset.retirar);
+    if (error) return NA.mensaje("msj", NA.error(error), "mal");
+    cargarPostulaciones();
+  }
+});
+
+document.addEventListener("change", async ev => {
+  const s = ev.target.closest("[data-estado-oferta]");
+  if (!s) return;
+  const { error } = await sb.from("ofertas").update({ estado: s.value }).eq("id", s.dataset.estadoOferta);
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  NA.mensaje("msj", s.value === "activa" ? "La oferta está visible de nuevo." : "Listo, la oferta ya no aparece en la lista pública.", "ok");
+});
+
+$("salir").onclick = async () => { await sb.auth.signOut(); location.href = "index.html"; };
+
+// ============ Inicio ============
+(async () => {
+  const s = await NA.sesion();
+  if (!s) return (location.href = "cuenta.html");
+  await NA.cargarAreas();
+  perfil = await NA.miPerfil();
+  if (!perfil) return NA.mensaje("msj", "No encontramos tu perfil. Escribinos para ayudarte.", "mal");
+  $("saludo").textContent = `Hola, ${(perfil.nombre || "").split(" ")[0]} 👋`;
+  perfil.tipo === "empresa" ? iniciarEmpresa() : iniciarTrabajador();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofertas · NosAyudamos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23e8590c'/><text x='50' y='68' font-size='56' text-anchor='middle' fill='white'>🤝</text></svg>">
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenedor">
+    <a class="logo" href="index.html"><span class="marca">🤝</span>Nos<b>Ayudamos</b></a>
+    <nav class="nav">
+      <a class="enlace ocultar-movil" href="ofertas.html">Ofertas</a>
+      <span id="nav-cuenta" class="nav"></span>
+    </nav>
+  </div>
+</header>
+
+<section class="bloque">
+  <div class="contenedor">
+    <div class="titulo-seccion">
+      <span class="sobre">Ofertas disponibles</span>
+      <h2>Trabajos por día en La Fortuna</h2>
+      <p>Para postularte necesitás un perfil de trabajador (es gratis).</p>
+    </div>
+    <div class="filtros">
+      <select id="filtro-area" style="max-width:280px"><option value="">Todas las áreas</option></select>
+    </div>
+    <div id="msj" class="mensaje"></div>
+    <div class="lista" id="lista"><p class="cargando">Cargando ofertas…</p></div>
+  </div>
+</section>
+
+<footer id="pie"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="comun.js"></script>
+<script>
+let perfil = null;
+let misPostulaciones = new Set();
+
+async function cargar() {
+  const cont = document.getElementById("lista");
+  cont.innerHTML = `<p class="cargando">Cargando ofertas…</p>`;
+  const area = document.getElementById("filtro-area").value;
+  try {
+    const { ofertas, empresas } = await NA.ofertasActivas({ area });
+    if (!ofertas.length) {
+      cont.innerHTML = `<div class="vacio">No hay ofertas en este momento${area ? " para esta área" : ""}. Volvé pronto.</div>`;
+      return;
+    }
+    cont.innerHTML = ofertas.map(o => {
+      let boton;
+      if (!perfil) boton = `<a class="btn btn-lava btn-chico" href="cuenta.html?modo=registro&tipo=trabajador">Registrarme para postularme</a>`;
+      else if (perfil.tipo !== "trabajador") boton = `<span class="pastilla gris">Solo trabajadores pueden postularse</span>`;
+      else if (misPostulaciones.has(o.id)) boton = `<span class="pastilla ok">✓ Ya te postulaste</span>`;
+      else boton = `<button class="btn btn-lava btn-chico" data-postular="${o.id}">Postularme</button>`;
+      return `<div id="${o.id}">${NA.tarjetaOferta(o, empresas[o.empresa_id], boton)}</div>`;
+    }).join("");
+    if (location.hash) document.querySelector(location.hash)?.scrollIntoView({ block: "center" });
+  } catch (e) {
+    cont.innerHTML = `<div class="vacio">${NA.esc(NA.error(e))}</div>`;
+  }
+}
+
+document.addEventListener("click", async ev => {
+  const b = ev.target.closest("[data-postular]");
+  if (!b) return;
+  const mensaje = prompt("¿Querés dejarle un mensaje corto al negocio? (opcional)") ;
+  if (mensaje === null) return;
+  b.disabled = true;
+  const { error } = await sb.from("postulaciones").insert({
+    oferta_id: b.dataset.postular, trabajador_id: perfil.id, mensaje: mensaje.trim() || null
+  });
+  if (error) { NA.mensaje("msj", NA.error(error), "mal"); b.disabled = false; return; }
+  misPostulaciones.add(b.dataset.postular);
+  b.outerHTML = `<span class="pastilla ok">✓ Ya te postulaste</span>`;
+  NA.mensaje("msj", "¡Listo! Te postulaste. El negocio verá tu perfil y te contactará si le interesa.", "ok");
+});
+
+(async () => {
+  const areas = await NA.cargarAreas();
+  const sel = document.getElementById("filtro-area");
+  sel.innerHTML += areas.map(a => `<option value="${a.id}">${NA.esc(a.nombre)}</option>`).join("");
+  sel.value = new URLSearchParams(location.search).get("area") || "";
+  sel.addEventListener("change", cargar);
+  perfil = await NA.miPerfil();
+  if (perfil?.tipo === "trabajador") {
+    const { data } = await sb.from("postulaciones").select("oferta_id").eq("trabajador_id", perfil.id).neq("estado", "retirada");
+    misPostulaciones = new Set((data || []).map(p => p.oferta_id));
+  }
+  cargar();
+})();
+</script>
+</body>
+</html>

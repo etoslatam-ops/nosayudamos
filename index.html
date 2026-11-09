@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NosAyudamos · Trabajos por día en La Fortuna</title>
+<meta name="description" content="Conectamos a personas que quieren trabajar por día u hora con negocios de La Fortuna que necesitan una mano extra.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23e8590c'/><text x='50' y='68' font-size='56' text-anchor='middle' fill='white'>🤝</text></svg>">
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenedor">
+    <a class="logo" href="index.html"><span class="marca">🤝</span>Nos<b>Ayudamos</b></a>
+    <nav class="nav">
+      <a class="enlace ocultar-movil" href="ofertas.html">Ofertas</a>
+      <a class="enlace ocultar-movil" href="#como-funciona">Cómo funciona</a>
+      <span id="nav-cuenta" class="nav"></span>
+    </nav>
+  </div>
+</header>
+
+<section class="portada">
+  <div class="contenedor">
+    <span class="etiqueta">🌋 La Fortuna · San Carlos</span>
+    <h1>Una mano extra, <span>por un día</span> o dos semanas.</h1>
+    <p class="lead">Si tenés días libres y querés ganar un ingreso adicional, o si tu negocio necesita personal por unos días, aquí se encuentran.</p>
+    <div class="acciones">
+      <a class="btn btn-lava" href="cuenta.html?modo=registro&tipo=trabajador">Quiero trabajar</a>
+      <a class="btn btn-borde" href="cuenta.html?modo=registro&tipo=empresa">Necesito personal</a>
+    </div>
+    <div class="cifras">
+      <div><strong>1 día – 2 semanas</strong>trabajos cortos</div>
+      <div><strong>Gratis</strong>durante el lanzamiento</div>
+      <div><strong>Sin intermediarios</strong>hablás directo</div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque" id="como-funciona">
+  <div class="contenedor">
+    <div class="titulo-seccion">
+      <span class="sobre">Cómo funciona</span>
+      <h2>Dos caminos, un mismo pueblo.</h2>
+      <p>No es una bolsa de empleo fijo. Es para turnos cortos: cubrir una incapacidad, una temporada alta, un evento o un día de mucho trabajo.</p>
+    </div>
+    <div class="dos-caminos">
+      <div class="camino">
+        <div class="icono">🙋</div>
+        <h3>Si querés trabajar</h3>
+        <ol>
+          <li>Creá tu perfil gratis y marcá en qué sabés trabajar.</li>
+          <li>Decí qué días tenés libres.</li>
+          <li>Postulate a las ofertas que te sirvan.</li>
+          <li>El negocio te contacta por WhatsApp o llamada.</li>
+        </ol>
+        <a class="btn btn-lava" href="cuenta.html?modo=registro&tipo=trabajador">Crear mi perfil</a>
+      </div>
+      <div class="camino empresa">
+        <div class="icono">🏨</div>
+        <h3>Si tenés un negocio</h3>
+        <ol>
+          <li>Registrá tu negocio en un minuto.</li>
+          <li>Publicá la oferta: fechas, horario y pago.</li>
+          <li>Revisá quién se postuló o buscá personal disponible.</li>
+          <li>Contactalos directo y marcá la oferta como cubierta.</li>
+        </ol>
+        <a class="btn btn-lava" href="cuenta.html?modo=registro&tipo=empresa">Registrar mi negocio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque franja">
+  <div class="contenedor">
+    <div class="titulo-seccion">
+      <span class="sobre">Áreas</span>
+      <h2>Desde jardinería hasta recepción.</h2>
+      <p>Cualquier trabajo que se pueda hacer por días u horas.</p>
+    </div>
+    <div class="chips" id="areas"></div>
+  </div>
+</section>
+
+<section class="bloque">
+  <div class="contenedor">
+    <div class="titulo-seccion">
+      <span class="sobre">Ahora mismo</span>
+      <h2>Ofertas recientes</h2>
+    </div>
+    <div class="lista" id="recientes"><p class="cargando">Cargando ofertas…</p></div>
+    <p style="margin-top:22px"><a class="btn btn-borde" href="ofertas.html">Ver todas las ofertas</a></p>
+  </div>
+</section>
+
+<section class="bloque franja">
+  <div class="contenedor">
+    <div class="titulo-seccion">
+      <span class="sobre">Preguntas</span>
+      <h2>Lo que más nos preguntan</h2>
+    </div>
+    <div class="preguntas">
+      <details><summary>¿Cuánto cuesta?</summary><p>Durante el lanzamiento es gratis para trabajadores y negocios. Más adelante podría haber una membresía; te avisaremos con tiempo.</p></details>
+      <details><summary>¿NosAyudamos me contrata o me paga?</summary><p>No. Solo conectamos. El acuerdo de horario, pago y condiciones es directamente entre el negocio y la persona.</p></details>
+      <details><summary>¿Tengo que dejar mi trabajo actual?</summary><p>Para nada. La idea es aprovechar días libres para tener un ingreso adicional.</p></details>
+      <details><summary>¿Cuánto puede durar un trabajo?</summary><p>Desde unas horas hasta un máximo de dos semanas.</p></details>
+      <details><summary>¿Quién ve mi número de teléfono?</summary><p>Solo los negocios registrados, para poder contactarte. Podés marcarte como "no disponible" cuando quieras.</p></details>
+    </div>
+    <p class="aviso" style="margin-top:24px">NosAyudamos es un intermediario de información. La contratación, el pago, los seguros y cualquier responsabilidad laboral corresponden al negocio que contrata.</p>
+  </div>
+</section>
+
+<footer id="pie"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="comun.js"></script>
+<script>
+(async () => {
+  const areas = await NA.cargarAreas();
+  document.getElementById("areas").innerHTML = areas.map(a =>
+    `<a class="chip" style="text-decoration:none;color:inherit" href="ofertas.html?area=${a.id}">${NA.esc(a.nombre)}</a>`).join("");
+
+  const cont = document.getElementById("recientes");
+  try {
+    const { ofertas, empresas } = await NA.ofertasActivas({ limite: 6 });
+    cont.innerHTML = ofertas.length
+      ? ofertas.map(o => NA.tarjetaOferta(o, empresas[o.empresa_id],
+          `<a class="btn btn-lava btn-chico" href="ofertas.html#${o.id}">Ver oferta</a>`)).join("")
+      : `<div class="vacio">Todavía no hay ofertas publicadas. ¡Sé el primer negocio en publicar una!<br><br>
+         <a class="btn btn-selva btn-chico" href="cuenta.html?modo=registro&tipo=empresa">Publicar una oferta</a></div>`;
+  } catch (e) {
+    cont.innerHTML = `<div class="vacio">No pudimos cargar las ofertas ahora.</div>`;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi cuenta · NosAyudamos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23e8590c'/><text x='50' y='68' font-size='56' text-anchor='middle' fill='white'>🤝</text></svg>">
+</head>
+<body>
+
+<header class="barra">
+  <div class="contenedor">
+    <a class="logo" href="index.html"><span class="marca">🤝</span>Nos<b>Ayudamos</b></a>
+    <nav class="nav"><a class="enlace" href="ofertas.html">Ofertas</a></nav>
+  </div>
+</header>
+
+<div class="contenedor">
+  <div class="caja caja-estrecha">
+    <div class="pestanas" id="pestanas">
+      <button data-modo="entrar" class="activa">Entrar</button>
+      <button data-modo="registro">Crear cuenta</button>
+    </div>
+    <div id="msj" class="mensaje"></div>
+
+    <!-- Entrar -->
+    <form id="f-entrar">
+      <h2>¡Hola de nuevo!</h2>
+      <div class="campo"><label for="e-correo">Correo</label><input id="e-correo" type="email" required autocomplete="email"></div>
+      <div class="campo"><label for="e-clave">Contraseña</label><input id="e-clave" type="password" required autocomplete="current-password"></div>
+      <button class="btn btn-selva" style="width:100%">Entrar</button>
+      <p style="text-align:center;margin-top:14px"><a href="#" id="olvide">Olvidé mi contraseña</a></p>
+    </form>
+
+    <!-- Registro -->
+    <form id="f-registro" class="oculto">
+      <h2>Crear cuenta gratis</h2>
+      <div class="selector-tipo">
+        <label><input type="radio" name="tipo" value="trabajador" checked><span>🙋</span>Quiero trabajar</label>
+        <label><input type="radio" name="tipo" value="empresa"><span>🏨</span>Necesito personal</label>
+      </div>
+      <div class="campo"><label for="r-nombre" id="l-nombre">Tu nombre completo</label><input id="r-nombre" type="text" required></div>
+      <div class="campo oculto" id="c-negocio"><label for="r-negocio">Nombre del negocio</label><input id="r-negocio" type="text"></div>
+      <div class="campo"><label for="r-tel">Teléfono / WhatsApp</label><input id="r-tel" type="tel" required placeholder="8888 8888"><small>Para que te puedan contactar.</small></div>
+      <div class="campo"><label for="r-correo">Correo</label><input id="r-correo" type="email" required autocomplete="email"></div>
+      <div class="campo"><label for="r-clave">Contraseña</label><input id="r-clave" type="password" required minlength="6" autocomplete="new-password"><small>Mínimo 6 caracteres.</small></div>
+      <label class="interruptor" style="font-weight:600;margin-bottom:16px"><input type="checkbox" id="r-acepto" required>
+        Entiendo que NosAyudamos solo conecta personas y negocios; el acuerdo de trabajo es entre ellos.</label>
+      <button class="btn btn-lava" style="width:100%">Crear mi cuenta</button>
+    </form>
+
+    <!-- Recuperar -->
+    <form id="f-recuperar" class="oculto">
+      <h2>Recuperar contraseña</h2>
+      <p style="color:var(--gris)">Te enviamos un enlace a tu correo para crear una contraseña nueva.</p>
+      <div class="campo"><label for="rc-correo">Correo</label><input id="rc-correo" type="email" required></div>
+      <button class="btn btn-selva" style="width:100%">Enviar enlace</button>
+    </form>
+
+    <!-- Nueva contraseña -->
+    <form id="f-nueva" class="oculto">
+      <h2>Contraseña nueva</h2>
+      <div class="campo"><label for="n-clave">Contraseña nueva</label><input id="n-clave" type="password" required minlength="6" autocomplete="new-password"></div>
+      <button class="btn btn-selva" style="width:100%">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<footer id="pie"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="comun.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const base = location.href.replace(/[^/]*([?#].*)?$/, "");
+const formas = { entrar: "f-entrar", registro: "f-registro", recuperar: "f-recuperar", nueva: "f-nueva" };
+
+function modo(m) {
+  Object.values(formas).forEach(f => $(f).classList.add("oculto"));
+  $(formas[m]).classList.remove("oculto");
+  document.querySelectorAll("#pestanas button").forEach(b => b.classList.toggle("activa", b.dataset.modo === m));
+  $("pestanas").classList.toggle("oculto", m === "nueva");
+  $("msj").classList.remove("visible");
+}
+
+function tipoElegido() {
+  const t = document.querySelector("input[name=tipo]:checked").value;
+  $("c-negocio").classList.toggle("oculto", t !== "empresa");
+  $("r-negocio").required = t === "empresa";
+  $("l-nombre").textContent = t === "empresa" ? "Nombre de la persona encargada" : "Tu nombre completo";
+}
+
+document.querySelectorAll("#pestanas button").forEach(b => b.onclick = () => modo(b.dataset.modo));
+document.querySelectorAll("input[name=tipo]").forEach(r => r.onchange = tipoElegido);
+$("olvide").onclick = e => { e.preventDefault(); modo("recuperar"); };
+
+$("f-entrar").onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await sb.auth.signInWithPassword({ email: $("e-correo").value.trim(), password: $("e-clave").value });
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  location.href = "panel.html";
+};
+
+$("f-registro").onsubmit = async e => {
+  e.preventDefault();
+  const tipo = document.querySelector("input[name=tipo]:checked").value;
+  const btn = e.submitter; btn.disabled = true;
+  const { data, error } = await sb.auth.signUp({
+    email: $("r-correo").value.trim(),
+    password: $("r-clave").value,
+    options: {
+      emailRedirectTo: base + "panel.html",
+      data: { tipo, nombre: $("r-nombre").value.trim(), telefono: $("r-tel").value.trim(), nombre_negocio: $("r-negocio").value.trim() || null }
+    }
+  });
+  btn.disabled = false;
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  if (data.session) return (location.href = "panel.html");
+  $("f-registro").reset(); tipoElegido();
+  NA.mensaje("msj", "¡Cuenta creada! Te enviamos un correo para confirmarla. Abrí el enlace del correo y listo.", "info");
+};
+
+$("f-recuperar").onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await sb.auth.resetPasswordForEmail($("rc-correo").value.trim(), { redirectTo: base + "cuenta.html?modo=nueva" });
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  NA.mensaje("msj", "Si ese correo tiene una cuenta, te llegará un enlace en unos minutos.", "info");
+};
+
+$("f-nueva").onsubmit = async e => {
+  e.preventDefault();
+  const { error } = await sb.auth.updateUser({ password: $("n-clave").value });
+  if (error) return NA.mensaje("msj", NA.error(error), "mal");
+  location.href = "panel.html";
+};
+
+sb.auth.onAuthStateChange(ev => { if (ev === "PASSWORD_RECOVERY") modo("nueva"); });
+
+const p = new URLSearchParams(location.search);
+if (["trabajador", "empresa"].includes(p.get("tipo"))) document.querySelector(`input[name=tipo][value=${p.get("tipo")}]`).checked = true;
+tipoElegido();
+modo(formas[p.get("modo")] ? p.get("modo") : "entrar");
+NA.sesion().then(s => { if (s && p.get("modo") !== "nueva") location.href = "panel.html"; });
+</script>
+</body>
+</html>
