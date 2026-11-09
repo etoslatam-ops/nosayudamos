@@ -55,6 +55,12 @@ img{max-width:100%}
 .portada::before{content:"";position:absolute;right:-180px;top:-180px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(42,157,143,.14) 0%,rgba(42,157,143,0) 70%)}
 .portada::after{content:none}
 .portada .contenedor{position:relative;z-index:1}
+.portada-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.portada-foto{margin:0}
+.portada-foto img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:20px;box-shadow:0 24px 48px -24px rgba(15,76,92,.45)}
+.portada-foto figcaption{font-size:.75rem;color:var(--gris);margin-top:8px;text-align:right}
+.portada-foto figcaption a{color:inherit}
+@media (max-width:900px){.portada-grid{grid-template-columns:1fr;gap:36px}}
 .etiqueta{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:999px;font-weight:600;font-size:.85rem;margin-bottom:18px}
 .portada h1{font-size:clamp(2.3rem,6vw,4.2rem);max-width:14ch}
 .portada h1 span{color:var(--selva-2)}
