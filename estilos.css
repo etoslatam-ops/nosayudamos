@@ -19,7 +19,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:"Inter",system-ui,sans-serif;color:var(--tinta);background:var(--arena);line-height:1.55;font-size:16px}
-h1,h2,h3,h4{font-family:"Plus Jakarta Sans","Inter",sans-serif;line-height:1.1;margin:0 0 .5em;letter-spacing:-.025em;font-weight:700}
+h1,h2,h3,h4{font-family:"Plus Jakarta Sans","Inter",sans-serif;line-height:1.1;margin:0 0 .5em;letter-spacing:-.01em;font-weight:700}
 a{color:var(--selva-2)}
 img{max-width:100%}
 .contenedor{width:100%;max-width:1120px;margin:0 auto;padding:0 18px}
