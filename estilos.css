@@ -57,7 +57,7 @@ img{max-width:100%}
 .portada .contenedor{position:relative;z-index:1}
 .portada-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
 .portada-foto{margin:0}
-.portada-foto img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:20px;box-shadow:0 24px 48px -24px rgba(15,76,92,.45)}
+.portada-foto img{display:block;width:100%;height:auto;filter:drop-shadow(0 18px 24px rgba(15,76,92,.18))}
 .portada-foto figcaption{font-size:.75rem;color:var(--gris);margin-top:8px;text-align:right}
 .portada-foto figcaption a{color:inherit}
 @media (max-width:900px){.portada-grid{grid-template-columns:1fr;gap:36px}}
