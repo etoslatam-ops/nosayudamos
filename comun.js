@@ -89,11 +89,35 @@ const NA = {
     return "Algo salió mal: " + m;
   },
 
+  // Texto en minúscula y sin tildes, para comparar
+  normal(t) {
+    return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  },
+
+  // Lugares sugeridos (se puede escribir cualquier otro)
+  LUGARES: ["La Fortuna", "El Tanque", "Los Ángeles", "Ciudad Quesada", "Aguas Zarcas", "Florencia",
+    "Muelle", "Chachagua", "Jicarito", "Santa Clara", "Pital", "Venecia", "Nuevo Arenal", "Tilarán", "Guatuso", "Upala"],
+
+  // Agrega la lista de sugerencias de lugares a la página (para usar con list="lista-lugares")
+  sugerenciasLugares() {
+    if (document.getElementById("lista-lugares")) return;
+    const d = document.createElement("datalist");
+    d.id = "lista-lugares";
+    d.innerHTML = NA.LUGARES.map(l => `<option value="${NA.esc(l)}">`).join("");
+    document.body.appendChild(d);
+  },
+
+  // Lugares que tienen ofertas activas en este momento
+  async lugaresConOfertas() {
+    const { data } = await sb.from("ofertas").select("lugar").eq("estado", "activa").gte("fecha_fin", NA.hoy()).not("lugar", "is", null);
+    return [...new Set((data || []).map(o => o.lugar.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  },
+
   // Dibuja una tarjeta de oferta
   tarjetaOferta(o, empresa, extra = "") {
     const cupos = o.cupos > 1 ? `<span class="pastilla gris">${o.cupos} personas</span>` : "";
     return `<article class="tarjeta">
-      <div class="meta"><span class="pastilla lava">${NA.esc(NA.nombreArea(o.area))}</span>${cupos}</div>
+      <div class="meta"><span class="pastilla lava">${NA.esc(NA.nombreArea(o.area))}</span>${o.lugar ? `<span class="pastilla">📍 ${NA.esc(o.lugar)}</span>` : ""}${cupos}</div>
       <h3>${NA.esc(o.titulo)}</h3>
       <div class="negocio">${NA.esc(empresa?.nombre_negocio || "Negocio")}${empresa?.tipo_negocio ? " · " + NA.esc(empresa.tipo_negocio) : ""}</div>
       <div class="meta">
@@ -107,10 +131,11 @@ const NA = {
   },
 
   // Ofertas activas y vigentes con los datos del negocio
-  async ofertasActivas({ area = "", limite = 60 } = {}) {
+  async ofertasActivas({ area = "", lugar = "", limite = 60 } = {}) {
     let q = sb.from("ofertas").select("*").eq("estado", "activa").gte("fecha_fin", NA.hoy())
       .order("fecha_inicio").limit(limite);
     if (area) q = q.eq("area", area);
+    if (lugar) q = q.eq("lugar", lugar);
     const { data: ofertas, error } = await q;
     if (error) throw error;
     const ids = [...new Set((ofertas || []).map(o => o.empresa_id))];
@@ -126,7 +151,7 @@ const NA = {
     const f = document.getElementById("pie");
     if (!f) return;
     f.innerHTML = `<div class="contenedor">
-      <div><strong style="color:#fff">NosAyudamos</strong> · Trabajos por día en La Fortuna, San Carlos.<br>
+      <div><strong>NosAyudamos</strong> · Trabajos por día y por horas.<br>
       Somos solo un punto de encuentro: la contratación y sus condiciones son responsabilidad de cada negocio.</div>
       <div><a href="ofertas.html">Ver ofertas</a> · <a href="cuenta.html?modo=registro">Registrarme</a></div>
     </div>`;

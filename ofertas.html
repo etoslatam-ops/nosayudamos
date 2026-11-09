@@ -25,11 +25,12 @@
   <div class="contenedor">
     <div class="titulo-seccion">
       <span class="sobre">Ofertas disponibles</span>
-      <h2>Trabajos por día en La Fortuna</h2>
+      <h2>Trabajos por día y por horas</h2>
       <p>Para postularte necesitás un perfil de trabajador (es gratis).</p>
     </div>
     <div class="filtros">
-      <select id="filtro-area" style="max-width:280px"><option value="">Todas las áreas</option></select>
+      <select id="filtro-area" style="max-width:260px"><option value="">Todas las áreas</option></select>
+      <select id="filtro-lugar" style="max-width:260px"><option value="">Todos los lugares</option></select>
     </div>
     <div id="msj" class="mensaje"></div>
     <div class="lista" id="lista"><p class="cargando">Cargando ofertas…</p></div>
@@ -40,7 +41,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="comun.js?v=2"></script>
+<script src="comun.js?v=3"></script>
 <script>
 let perfil = null;
 let misPostulaciones = new Set();
@@ -49,10 +50,11 @@ async function cargar() {
   const cont = document.getElementById("lista");
   cont.innerHTML = `<p class="cargando">Cargando ofertas…</p>`;
   const area = document.getElementById("filtro-area").value;
+  const lugar = document.getElementById("filtro-lugar").value;
   try {
-    const { ofertas, empresas } = await NA.ofertasActivas({ area });
+    const { ofertas, empresas } = await NA.ofertasActivas({ area, lugar });
     if (!ofertas.length) {
-      cont.innerHTML = `<div class="vacio">No hay ofertas en este momento${area ? " para esta área" : ""}. Volvé pronto.</div>`;
+      cont.innerHTML = `<div class="vacio">No hay ofertas en este momento${area || lugar ? " con estos filtros" : ""}. Volvé pronto.</div>`;
       return;
     }
     cont.innerHTML = ofertas.map(o => {
@@ -90,6 +92,12 @@ document.addEventListener("click", async ev => {
   sel.innerHTML += areas.map(a => `<option value="${a.id}">${NA.esc(a.nombre)}</option>`).join("");
   sel.value = new URLSearchParams(location.search).get("area") || "";
   sel.addEventListener("change", cargar);
+  const selL = document.getElementById("filtro-lugar");
+  const lugares = await NA.lugaresConOfertas();
+  selL.innerHTML += lugares.map(l => `<option value="${NA.esc(l)}">${NA.esc(l)}</option>`).join("");
+  const lp = new URLSearchParams(location.search).get("lugar");
+  if (lp && lugares.includes(lp)) selL.value = lp;
+  selL.addEventListener("change", cargar);
   perfil = await NA.miPerfil();
   if (perfil?.tipo === "trabajador") {
     const { data } = await sb.from("postulaciones").select("oferta_id").eq("trabajador_id", perfil.id).neq("estado", "retirada");

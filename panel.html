@@ -42,6 +42,7 @@
         <div class="campo"><label for="t-nombre">Nombre completo</label><input id="t-nombre" type="text" required></div>
         <div class="campo"><label for="t-tel">Teléfono / WhatsApp</label><input id="t-tel" type="tel" required></div>
       </div>
+      <div class="campo"><label for="t-zona">¿En qué zona vivís?</label><input id="t-zona" type="text" list="lista-lugares" placeholder="Ej: La Fortuna, Ciudad Quesada…"><small>Así los negocios cercanos te encuentran más fácil.</small></div>
       <div class="campo"><label>¿En qué sabés trabajar?</label><div class="chips" id="t-areas"></div></div>
       <div class="campo"><label for="t-dispo">¿Qué días u horas tenés libres?</label><input id="t-dispo" type="text" placeholder="Ej: lunes y martes, o fines de semana en la tarde"></div>
       <div class="campo"><label for="t-exp">Experiencia</label><textarea id="t-exp" placeholder="Ej: 3 años como salonero en hotel, sé manejar caja…"></textarea></div>
@@ -63,6 +64,7 @@
     <form class="caja" id="f-oferta" style="max-width:720px">
       <h2>Publicar una oferta</h2>
       <div class="campo"><label for="o-titulo">Título</label><input id="o-titulo" type="text" required placeholder="Ej: Salonero para fin de semana"></div>
+      <div class="campo"><label for="o-lugar">Lugar del trabajo</label><input id="o-lugar" type="text" list="lista-lugares" required placeholder="Ej: La Fortuna, El Tanque, Ciudad Quesada…"><small>Pueblo o zona donde se va a trabajar.</small></div>
       <div class="fila">
         <div class="campo"><label for="o-area">Área</label><select id="o-area" required></select></div>
         <div class="campo"><label for="o-cupos">¿Cuántas personas?</label><input id="o-cupos" type="number" min="1" value="1" required></div>
@@ -81,7 +83,8 @@
   </div>
 
   <div class="vista" id="v-personal">
-    <div class="filtros"><select id="p-area" style="max-width:280px"><option value="">Todas las áreas</option></select></div>
+    <div class="filtros"><select id="p-area" style="max-width:260px"><option value="">Todas las áreas</option></select>
+      <input id="p-zona" type="text" list="lista-lugares" placeholder="Filtrar por zona (opcional)" style="max-width:260px"></div>
     <div class="lista" id="lista-personal"></div>
   </div>
 
@@ -96,7 +99,10 @@
         <div class="campo"><label for="n-nombre">Persona encargada</label><input id="n-nombre" type="text" required></div>
         <div class="campo"><label for="n-tel">Teléfono / WhatsApp</label><input id="n-tel" type="tel" required></div>
       </div>
-      <div class="campo"><label for="n-dir">Dirección</label><input id="n-dir" type="text" placeholder="Ej: 200 m oeste de la iglesia, La Fortuna"></div>
+      <div class="fila">
+        <div class="campo"><label for="n-zona">Zona o pueblo</label><input id="n-zona" type="text" list="lista-lugares" placeholder="Ej: La Fortuna"></div>
+        <div class="campo"><label for="n-dir">Dirección</label><input id="n-dir" type="text" placeholder="Ej: 200 m oeste de la iglesia"></div>
+      </div>
       <div class="campo"><label for="n-desc">Descripción</label><textarea id="n-desc"></textarea></div>
       <button class="btn btn-lava">Guardar</button>
     </form>
@@ -107,7 +113,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="comun.js?v=2"></script>
+<script src="comun.js?v=3"></script>
 <script>
 const $ = id => document.getElementById(id);
 let perfil = null;
@@ -145,6 +151,7 @@ async function iniciarTrabajador() {
   const { data: t } = await sb.from("trabajadores").select("*").eq("perfil_id", perfil.id).maybeSingle();
   $("t-nombre").value = perfil.nombre || "";
   $("t-tel").value = perfil.telefono || "";
+  $("t-zona").value = perfil.zona || "";
   $("t-disponible").checked = t?.disponible ?? true;
   $("t-dispo").value = t?.disponibilidad || "";
   $("t-exp").value = t?.experiencia || "";
@@ -160,7 +167,7 @@ $("f-perfil-t").onsubmit = async e => {
   e.preventDefault();
   const areas = [...$("t-areas").querySelectorAll("input:checked")].map(i => i.value);
   if (!areas.length) return NA.mensaje("msj", "Marcá al menos un área de trabajo.", "mal");
-  const r1 = await sb.from("perfiles").update({ nombre: $("t-nombre").value.trim(), telefono: $("t-tel").value.trim() }).eq("id", perfil.id);
+  const r1 = await sb.from("perfiles").update({ nombre: $("t-nombre").value.trim(), telefono: $("t-tel").value.trim(), zona: $("t-zona").value.trim() || null }).eq("id", perfil.id);
   const r2 = await sb.from("trabajadores").update({
     areas, disponible: $("t-disponible").checked, disponibilidad: $("t-dispo").value.trim(),
     experiencia: $("t-exp").value.trim(), descripcion: $("t-desc").value.trim()
@@ -211,10 +218,13 @@ async function iniciarEmpresa() {
   $("n-desc").value = e?.descripcion || "";
   $("n-nombre").value = perfil.nombre || "";
   $("n-tel").value = perfil.telefono || "";
+  $("n-zona").value = perfil.zona || "";
+  $("o-lugar").value = perfil.zona || "";
   const opciones = NA.areas.map(a => `<option value="${a.id}">${NA.esc(a.nombre)}</option>`).join("");
   $("o-area").innerHTML = opciones;
   $("p-area").innerHTML += opciones;
   $("p-area").onchange = cargarPersonal;
+  $("p-zona").onchange = cargarPersonal;
   $("o-inicio").min = $("o-fin").min = NA.hoy();
   $("o-inicio").onchange = () => { $("o-fin").min = $("o-inicio").value; if (!$("o-fin").value || $("o-fin").value < $("o-inicio").value) $("o-fin").value = $("o-inicio").value; };
   abrir(e?.tipo_negocio ? "v-ofertas" : "v-negocio");
@@ -223,7 +233,7 @@ async function iniciarEmpresa() {
 
 $("f-negocio").onsubmit = async e => {
   e.preventDefault();
-  const r1 = await sb.from("perfiles").update({ nombre: $("n-nombre").value.trim(), telefono: $("n-tel").value.trim() }).eq("id", perfil.id);
+  const r1 = await sb.from("perfiles").update({ nombre: $("n-nombre").value.trim(), telefono: $("n-tel").value.trim(), zona: $("n-zona").value.trim() || null }).eq("id", perfil.id);
   const r2 = await sb.from("empresas").update({
     nombre_negocio: $("n-negocio").value.trim(), tipo_negocio: $("n-tipo").value.trim(),
     direccion: $("n-dir").value.trim(), descripcion: $("n-desc").value.trim()
@@ -238,7 +248,7 @@ $("f-oferta").onsubmit = async e => {
   e.preventDefault();
   const btn = e.submitter; btn.disabled = true;
   const { error } = await sb.from("ofertas").insert({
-    empresa_id: perfil.id, titulo: $("o-titulo").value.trim(), area: $("o-area").value,
+    empresa_id: perfil.id, titulo: $("o-titulo").value.trim(), area: $("o-area").value, lugar: $("o-lugar").value.trim(),
     cupos: +$("o-cupos").value || 1, fecha_inicio: $("o-inicio").value, fecha_fin: $("o-fin").value,
     horario: $("o-horario").value.trim() || null, pago: $("o-pago").value.trim() || null,
     descripcion: $("o-desc").value.trim() || null
@@ -246,6 +256,7 @@ $("f-oferta").onsubmit = async e => {
   btn.disabled = false;
   if (error) return NA.mensaje("msj", NA.error(error), "mal");
   $("f-oferta").reset();
+  $("o-lugar").value = perfil.zona || "";
   abrir("v-ofertas");
   NA.mensaje("msj", "¡Oferta publicada! Ya aparece en la lista de ofertas.", "ok");
 };
@@ -304,12 +315,16 @@ async function cargarPersonal() {
   if (!conAreas.length) return (cont.innerHTML = `<div class="vacio">No hay personas disponibles${$("p-area").value ? " en esta área" : ""} por ahora. Publicá una oferta y te avisamos con las postulaciones.</div>`);
   const { data: perfs } = await sb.from("perfiles").select("*").in("id", conAreas.map(t => t.perfil_id));
   const pf = Object.fromEntries((perfs || []).map(p => [p.id, p]));
-  cont.innerHTML = conAreas.map(t => {
+  const zona = NA.normal($("p-zona").value);
+  const lista = zona ? conAreas.filter(t => NA.normal(pf[t.perfil_id]?.zona).includes(zona)) : conAreas;
+  if (!lista.length) return (cont.innerHTML = `<div class="vacio">No hay personas disponibles en esa zona por ahora.</div>`);
+  cont.innerHTML = lista.map(t => {
     const p = pf[t.perfil_id] || {};
     const wa = NA.whatsapp(p.telefono, `Hola ${p.nombre || ""}, te vi en NosAyudamos. ¿Tenés disponibilidad para un trabajo?`);
     return `<article class="tarjeta">
       <h3>${NA.esc(p.nombre || "Trabajador")}</h3>
       <div class="meta">${t.areas.map(a => `<span class="pastilla lava">${NA.esc(NA.nombreArea(a))}</span>`).join("")}</div>
+      ${p.zona ? `<p>📍 ${NA.esc(p.zona)}</p>` : ""}
       ${t.disponibilidad ? `<p>📅 ${NA.esc(t.disponibilidad)}</p>` : ""}
       ${t.experiencia ? `<p>${NA.esc(t.experiencia)}</p>` : ""}
       ${t.descripcion ? `<p>${NA.esc(t.descripcion)}</p>` : ""}
@@ -360,6 +375,7 @@ $("salir").onclick = async () => { await sb.auth.signOut(); location.href = "ind
   const s = await NA.sesion();
   if (!s) return (location.href = "cuenta.html");
   await NA.cargarAreas();
+  NA.sugerenciasLugares();
   perfil = await NA.miPerfil();
   if (!perfil) return NA.mensaje("msj", "No encontramos tu perfil. Escribinos para ayudarte.", "mal");
   $("saludo").textContent = `Hola, ${(perfil.nombre || "").split(" ")[0]} 👋`;
